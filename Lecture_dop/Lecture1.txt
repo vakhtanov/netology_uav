@@ -1,0 +1,20 @@
+Можно в список еще добавить VGG Image Annotator. Распаковывается архив на компьютер и запускается в любом браузере без установки - https://www.robots.ox.ac.uk/~vgg/software/via/
+
+
+GIT - annotator
+
+Можно онлайн посмотреть - https://annotate.officialstatistics.org/
+
+инструменты разметки в поиске
+
+ROBOFLOW - the best - есть размеченные данные
+Caggle - датасеты для соревнований
+
+https://www.kinopoisk.ru/film/5233629/
+
+нейронки для микрокомпов
+https://docs.ultralytics.com/guides/nvidia-jetson/
+https://docs.ultralytics.com/integrations/rockchip-rknn/
+
+https://paint.js.org/
+https://pixlr.com/ru/editor/

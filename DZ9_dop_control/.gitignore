@@ -1,0 +1,7 @@
+plugins_origin/*
+explayer/_internal/*
+explayer/logs/*
+explayer/media/*
+explayer/*
+!explayer/plugins/*
+plugins_change/*
