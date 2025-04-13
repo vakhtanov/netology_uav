@@ -16,6 +16,8 @@ class Drone:
 
 
 class DroneControl(plugins.Base):
+    last_detection_time = time.time()
+
     def __init__(self, player=None, executor=None):
         self.player = player  # ссылка на объект плеера (для доступу к методам работы с интерфейсом)
         # Плагины, которые будут загружены раньше текущего
@@ -82,28 +84,37 @@ class DroneControl(plugins.Base):
                 self.running = False
 
     def active_track(self, detect_result):
-        for box in detect_result:
-            dx = box.xywhn[0][0] - 0.5  # определяем смещение относительно центра
-            rc4_value = int(dx * 200) + 1500  # рассчитываем команду для поворота
-
-            dy = box.xywhn[0][1] - 0.5  # рассчитываем команду для тангажа (движение вперет/назад)
-            rc2_value = int(dy * 500) + 1500
-
-            # print('команда для rc4', dx, rc4_value, dy, rc2_value)
-
-            # Отправляем команду на изменение значения RC4
-            self.master.mav.rc_channels_override_send(
-                self.master.target_system,  # ID системы
-                self.master.target_component,  # ID компонента
-                0, rc2_value, 1500, rc4_value, 0, 0, 0, 0  # Значения для RC1 - RC8 (оставьте нулями, если не используете)
-            )
-
         if not len(detect_result):
-            # если ничего не обнаружили
+             # если ничего не обнаружили
             ######### Блок для кода ДЗ #########
             # Добавьте сюда код поведения аппарата, если машинка не обнаружена
-            pass
-            #############################################################################################
+            lost_time = time.time() - self.last_detection_time
+            #print('объект не найден',lost_time)
+            if  lost_time >= 2:
+                #print('режим поворота')
+                rc4_value = 1550
+                self.master.mav.rc_channels_override_send(
+                    self.master.target_system,  # ID системы
+                    self.master.target_component,  # ID компонента
+                    0, 1500, 1500, rc4_value, 0, 0, 0, 0  # Значения для RC1 - RC8 (оставьте нулями, если не используете)
+                 )
+                 ########################################################################################
+        else:
+            self.last_detection_time = time.time() #Vakhtanov
+            for box in detect_result:
+                dx = box.xywhn[0][0] - 0.5  # определяем смещение относительно центра
+                rc4_value = int(dx * 200) + 1500  # рассчитываем команду для поворота
+
+                dy = box.xywhn[0][1] - 0.5  # рассчитываем команду для тангажа (движение вперет/назад)
+                rc2_value = int(dy * 500) + 1500
+
+                #print('команда для rc4', dx, rc4_value, dy, rc2_value)
+                # Отправляем команду на изменение значения RC4
+                self.master.mav.rc_channels_override_send(
+                    self.master.target_system,  # ID системы
+                    self.master.target_component,  # ID компонента
+                    0, rc2_value, 1500, rc4_value, 0, 0, 0, 0  # Значения для RC1 - RC8 (оставьте нулями, если не используете)
+                )
 
     def close_connection(self):
         # Закрываем подключение Mavlink
